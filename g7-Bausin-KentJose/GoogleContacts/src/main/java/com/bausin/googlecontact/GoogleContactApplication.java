@@ -1,4 +1,4 @@
-package com.bausin.googlecontact;
+package com.bausin.GoogleContact;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.bausin.googlecontact.config;
+package com.bausin.GoogleContact.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

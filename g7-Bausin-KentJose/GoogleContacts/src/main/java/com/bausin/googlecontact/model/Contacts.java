@@ -1,4 +1,4 @@
-package main.java.com.bausin.googlecontact.model;
+package com.bausin.GoogleContact.model;
 
 public class Contacts {
     private String resourceName;
