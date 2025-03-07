@@ -13,44 +13,24 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/user-info").permitAll()
+                        .requestMatchers("/").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth -> oauth
                         .defaultSuccessUrl("/user-info", true)
-                        .userInfoEndpoint(userInfo -> userInfo.userService(this.customOAuth2UserService()))
                 )
-                .logout(logout -> logout.logoutSuccessUrl("/"))
-                .formLogin(form -> form.defaultSuccessUrl("/user-info", true));
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/")
+                )
+                .formLogin(form -> form
+                        .defaultSuccessUrl("/user-info", true)
+                );
 
         return http.build();
-    }
-
-    @Bean
-    public OAuth2UserService<OAuth2UserRequest, OAuth2User> customOAuth2UserService() {
-        return userRequest -> {
-            String registrationId = userRequest.getClientRegistration().getRegistrationId();
-            OAuth2User oauthUser;
-
-            if ("google".equals(registrationId)) {
-                OidcUserService oidcUserService = new OidcUserService();
-                OidcUser oidcUser = oidcUserService.loadUser((org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest) userRequest);
-                oauthUser = oidcUser;
-            } else {
-                DefaultOAuth2UserService defaultService = new DefaultOAuth2UserService();
-                oauthUser = defaultService.loadUser(userRequest);
-            }
-
-            String accessToken = userRequest.getAccessToken().getTokenValue();
-            System.out.println("Access Token: " + accessToken);
-
-            return oauthUser;
-        };
     }
 
 }

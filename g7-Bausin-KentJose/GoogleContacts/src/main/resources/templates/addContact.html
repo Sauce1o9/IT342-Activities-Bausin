@@ -5,78 +5,134 @@
     <title>Add New Contact</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --primary-color: #007bff;
-            --secondary-color: #6c757d;
-            --background-color: #f4f6f9;
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --secondary-color: #64748b;
+            --background-color: #f8fafc;
             --card-background: white;
-            --text-color-dark: #2c3e50;
-            --text-color-light: #7f8c8d;
+            --text-color-dark: #1e293b;
+            --text-color-light: #64748b;
+            --accent-color: #c4b5fd;
+            --success-color: #10b981;
+            --error-color: #ef4444;
         }
 
         body {
             background-color: var(--background-color);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             color: var(--text-color-dark);
+            min-height: 100vh;
+            position: relative;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 20%);
+        }
+
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.8) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            padding: 15px 0;
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--text-color-dark);
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            background-color: rgba(99, 102, 241, 0.1);
+            color: var(--primary-color);
         }
 
         .form-container {
-            max-width: 500px;
-            margin: 60px auto;
-            perspective: 1000px;
+            max-width: 550px;
+            margin: 80px auto;
         }
 
         .card {
             background: var(--card-background);
             border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
-            transition: all 0.3s ease;
-            transform-style: preserve-3d;
-            transform: rotateX(10deg) scale(0.95);
+            border: none;
+            box-shadow:
+                0 10px 25px rgba(0, 0, 0, 0.05),
+                0 5px 10px rgba(0, 0, 0, 0.02),
+                0 0 0 1px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .card:hover {
-            transform: rotateX(0) scale(1);
-            box-shadow: 0 20px 40px rgba(50, 50, 93, 0.15), 0 8px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.08),
+                0 10px 20px rgba(0, 0, 0, 0.04),
+                0 0 0 1px rgba(0, 0, 0, 0.05);
         }
 
         .card-header {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
             color: white;
-            border-top-left-radius: 16px;
-            border-top-right-radius: 16px;
-            padding: 20px;
-            text-align: center;
+            border: none;
+            padding: 30px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transform: rotate(30deg);
         }
 
         .card-header h3 {
             margin: 0;
             font-weight: 700;
             letter-spacing: -0.5px;
+            position: relative;
+            font-size: 1.75rem;
         }
 
         .card-body {
-            padding: 30px;
+            padding: 40px 30px;
         }
 
         .form-label {
-            font-weight: 600;
+            font-weight: 500;
             color: var(--text-color-dark);
             margin-bottom: 8px;
+            font-size: 0.95rem;
         }
 
         .form-control {
-            border-radius: 8px;
-            padding: 12px 15px;
-            border-color: rgba(0, 123, 255, 0.2);
+            border-radius: 10px;
+            padding: 14px 16px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background-color: #f9fafb;
             transition: all 0.3s ease;
+            font-size: 1rem;
         }
 
         .form-control:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            background-color: white;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+        }
+
+        .form-control::placeholder {
+            color: #a1a1aa;
         }
 
         .btn {
@@ -84,67 +140,107 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 12px 20px;
-            border-radius: 8px;
+            padding: 12px 24px;
+            border-radius: 10px;
             font-weight: 600;
             transition: all 0.3s ease;
+            font-size: 1rem;
         }
 
         .btn-outline-secondary {
-            border-color: var(--secondary-color);
+            border: 1px solid var(--secondary-color);
             color: var(--secondary-color);
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-            transform: translateY(-3px);
-            box-shadow: 0 7px 20px rgba(0, 123, 255, 0.4);
+            background: transparent;
         }
 
         .btn-outline-secondary:hover {
             background-color: var(--secondary-color);
             color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            border: none;
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-hover), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
         }
 
         .alert {
-            border-radius: 8px;
-            padding: 15px;
+            border-radius: 10px;
+            padding: 16px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            border: none;
+            margin-bottom: 24px;
         }
 
         .alert-danger {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: #dc3545;
-            border: none;
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--error-color);
         }
 
-        .btn i {
-            margin-right: 5px;
+        .alert-danger::before {
+            content: '⚠️';
+            font-size: 1.2rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 24px !important;
+        }
+
+        /* Input focus animation */
+        .form-floating {
+            position: relative;
+        }
+
+        /* Subtle decoration */
+        .decoration {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .decoration-1 {
+            top: -100px;
+            right: -100px;
+        }
+
+        .decoration-2 {
+            bottom: -100px;
+            left: -100px;
         }
     </style>
 </head>
 
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-    <div class="container-fluid">
+<nav class="navbar navbar-expand-lg navbar-light mb-4">
+    <div class="container">
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="/contacts">Contacts</a>
+                    <a class="nav-link" href="/contacts">
+                        <i class="bi bi-people me-2"></i>Contacts
+                    </a>
                 </li>
             </ul>
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/user-info">Profile</a>
+                    <a class="nav-link" href="/user-info">
+                        <i class="bi bi-person-circle me-2"></i>Profile
+                    </a>
                 </li>
             </ul>
         </div>
@@ -152,14 +248,14 @@
 </nav>
 
 <div class="container form-container">
-
     <div class="card">
-        <div class="card-header bg-primary text-white text-center">
-            <h3>Add New Contact</h3>
+        <div class="card-header text-center">
+            <h3><i class="bi bi-person-plus me-2"></i>Add New Contact</h3>
         </div>
 
-
         <div class="card-body">
+            <div class="decoration decoration-1"></div>
+            <div class="decoration decoration-2"></div>
 
             <div th:if="${error}" class="alert alert-danger" th:text="${error}">Error message</div>
 
@@ -167,23 +263,34 @@
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
                 <div class="mb-3">
-                    <label for="displayName" class="form-label">Full Name</label>
-                    <input type="text" class="form-control" id="displayName" name="displayName" required>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email Address</label>
-                    <input type="email" class="form-control" id="email" name="email">
-                </div>
-                <div class="mb-3">
-                    <label for="phoneNumber" class="form-label">Phone Number</label>
-                    <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber">
+                    <label for="displayName" class="form-label">
+                        <i class="bi bi-person me-2"></i>Full Name
+                    </label>
+                    <input type="text" class="form-control" id="displayName" name="displayName" placeholder="Enter full name" required>
                 </div>
 
-                <div class="d-flex justify-content-between">
-                    <a href="/contacts" class="btn btn-outline-secondary">Cancel</a>
-                    <button type="submit" class="btn btn-primary">Save Contact</button>
+                <div class="mb-3">
+                    <label for="email" class="form-label">
+                        <i class="bi bi-envelope me-2"></i>Email Address
+                    </label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter email address">
                 </div>
 
+                <div class="mb-3">
+                    <label for="phoneNumber" class="form-label">
+                        <i class="bi bi-telephone me-2"></i>Phone Number
+                    </label>
+                    <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Enter phone number">
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="/contacts" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i>Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i>Save Contact
+                    </button>
+                </div>
             </form>
         </div>
     </div>
