@@ -34,7 +34,7 @@ public class UserController {
 
     @GetMapping("")
     public String index() {
-        return "home";  // Return home view
+        return "home";
     }
 
     @GetMapping("/user-info")
@@ -42,31 +42,27 @@ public class UserController {
 
         if (principal instanceof OidcUser) {
             OidcUser oidcUser = (OidcUser) principal;
-            // Extract OIDC user info
             String name = oidcUser.getFullName();
             String email = oidcUser.getEmail();
             String pictureUrl = oidcUser.getPicture();
 
-            // Add attributes to model
             model.addAttribute("name", name);
             model.addAttribute("email", email);
             model.addAttribute("pictureUrl", pictureUrl);
         } else if (principal instanceof OAuth2User) {
             OAuth2User oauth2User = (OAuth2User) principal;
-            // Extract OAuth2 user info
             String name = oauth2User.getAttribute("name");
             String email = oauth2User.getAttribute("email");
             String pictureUrl = oauth2User.getAttribute("picture");
 
-            // Add attributes to model
             model.addAttribute("name", name);
             model.addAttribute("email", email);
             model.addAttribute("pictureUrl", pictureUrl);
         } else {
-            return "redirect:/"; // Redirect if not authenticated
+            return "redirect:/";
         }
 
-        return "user-info"; // Return the view name
+        return "user-info";
     }
 
     @GetMapping("/contacts")
@@ -111,27 +107,22 @@ public class UserController {
             Model model) {
 
         try {
-            // Fetch the contact by ID
             Person contact = googleContactsService.getPersonById(principal, "people/" + contactId);
 
             if (contact == null) {
                 throw new RuntimeException("Contact not found.");
             }
 
-            // Add the contact to the model
             model.addAttribute("contact", contact);
 
-            // Return the edit form template
             return "editContact";
 
         } catch (RuntimeException e) {
-            // Log the error and add an error message to the model
             model.addAttribute("error", "Failed to load contact: " + e.getMessage());
-            return "redirect:/contacts"; // Redirect to the contacts list with an error message
+            return "redirect:/contacts";
         }
     }
 
-    // POST: Handle the form submission
     @PostMapping("/contacts/edit/people/{contactId}")
     public String updateContact(
             @PathVariable String contactId,
@@ -142,17 +133,14 @@ public class UserController {
             Model model) {
 
         try {
-            // Fetch the contact to get the current etag
             Person existingContact = googleContactsService.getPersonById(principal, "people/" + contactId);
             if (existingContact == null) {
                 throw new RuntimeException("Contact not found.");
             }
 
-            // Create a person for update
             Person updatePerson = new Person();
             updatePerson.setEtag(existingContact.getEtag()); // Set the etag
 
-            // Update name if provided
             if (displayName != null && !displayName.isEmpty()) {
                 Name personName = new Name();
                 personName.setDisplayName(displayName);
@@ -160,7 +148,6 @@ public class UserController {
                 updatePerson.setNames(Arrays.asList(personName));
             }
 
-            // Update email if provided
             if (email != null && !email.isEmpty()) {
                 EmailAddress emailAddress = new EmailAddress();
                 emailAddress.setValue(email);
@@ -168,7 +155,6 @@ public class UserController {
                 updatePerson.setEmailAddresses(Arrays.asList(emailAddress));
             }
 
-            // Update phone if provided
             if (phoneNumber != null && !phoneNumber.isEmpty()) {
                 PhoneNumber personPhone = new PhoneNumber();
                 personPhone.setValue(phoneNumber);
@@ -176,25 +162,22 @@ public class UserController {
                 updatePerson.setPhoneNumbers(Arrays.asList(personPhone));
             }
 
-            // Determine which fields to update
             List<String> updatePersonFields = new ArrayList<>();
             if (displayName != null && !displayName.isEmpty()) updatePersonFields.add("names");
             if (email != null && !email.isEmpty()) updatePersonFields.add("emailAddresses");
             if (phoneNumber != null && !phoneNumber.isEmpty()) updatePersonFields.add("phoneNumbers");
 
-            // Validate that at least one field is being updated
             if (updatePersonFields.isEmpty()) {
                 throw new RuntimeException("No fields provided for update.");
             }
 
-            // Perform the update
             googleContactsService.updateContact(principal, "people/" + contactId, updatePerson, updatePersonFields);
 
-            return "redirect:/contacts"; // Redirect to contacts list after successful update
+            return "redirect:/contacts";
 
         } catch (RuntimeException e) {
             model.addAttribute("error", "Failed to update contact: " + e.getMessage());
-            return "editContact"; // Return to the edit page with an error message
+            return "editContact";
         }
     }
 

@@ -30,13 +30,9 @@ public class GoogleContactsService {
     private OAuth2AuthorizedClientService authorizedClientService;
 
     private PeopleService getPeopleService(OAuth2User principal) {
-        // Get the client registration ID (should be "google" based on your configuration)
         String clientRegistrationId = "google";
 
-        // Get the name/identifier from principal
         String name = principal.getName();
-
-        // Load the authorized client
         OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient(
                 clientRegistrationId,
                 name
@@ -52,10 +48,8 @@ public class GoogleContactsService {
             throw new RuntimeException("Access token is null");
         }
 
-        // For debugging
         System.out.println("Access Token: " + accessToken);
 
-        // Build and return the PeopleService
         return new PeopleService.Builder(
                 new NetHttpTransport(),
                 JSON_FACTORY,
@@ -65,6 +59,7 @@ public class GoogleContactsService {
     }
 
     public List<Contacts> getContacts(OAuth2User principal) {
+        //Read Contacts
         List<Contacts> contactsList = new ArrayList<>();
 
         if (principal == null) {
@@ -116,16 +111,12 @@ public class GoogleContactsService {
         try {
             PeopleService peopleService = getPeopleService(principal);
 
-            // Create a new person
             Person newPerson = new Person();
-
-            // Add name
             Name personName = new Name();
             personName.setDisplayName(name);
             personName.setGivenName(name);
             newPerson.setNames(Arrays.asList(personName));
 
-            // Add email if provided
             if (email != null && !email.isEmpty()) {
                 EmailAddress emailAddress = new EmailAddress();
                 emailAddress.setValue(email);
@@ -133,7 +124,6 @@ public class GoogleContactsService {
                 newPerson.setEmailAddresses(Arrays.asList(emailAddress));
             }
 
-            // Add phone if provided
             if (phoneNumber != null && !phoneNumber.isEmpty()) {
                 PhoneNumber personPhone = new PhoneNumber();
                 personPhone.setValue(phoneNumber);
@@ -141,7 +131,7 @@ public class GoogleContactsService {
                 newPerson.setPhoneNumbers(Arrays.asList(personPhone));
             }
 
-            // Create the contact
+            // Create Contacts
             peopleService.people().createContact(newPerson).execute();
         } catch (IOException e) {
             throw new RuntimeException("Failed to add contact: " + e.getMessage(), e);
@@ -152,7 +142,7 @@ public class GoogleContactsService {
         try {
             PeopleService peopleService = getPeopleService(principal);
 
-            // Perform the update
+            // Update Contacts
             peopleService.people().updateContact(resourceName, updatePerson)
                     .setUpdatePersonFields(String.join(",", updatePersonFields))
                     .execute();
@@ -165,6 +155,7 @@ public class GoogleContactsService {
         }
     }
 
+    //Delete Contacts
     public void deleteContact(OAuth2User principal, String resourceName) {
         try {
             PeopleService peopleService = getPeopleService(principal);
